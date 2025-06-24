@@ -1,0 +1,91 @@
+{
+  "name": "convert-to-webp",
+  "displayName": "Convert to WebP",
+  "description": "Convert images (JPG/PNG) to WebP format with compression statistics",
+  "version": "1.0.0",
+  "publisher": "goozyshi",
+  "icon": "icon.png",
+  "galleryBanner": {
+    "color": "#2B5797",
+    "theme": "dark"
+  },
+  "badges": [
+    {
+      "url": "https://img.shields.io/vscode-marketplace/v/goozyshi.convert-to-webp.svg",
+      "href": "https://marketplace.visualstudio.com/items?itemName=goozyshi.convert-to-webp",
+      "description": "Version"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/goozyshi/convert-to-webp"
+  },
+  "engines": {
+    "vscode": "^1.60.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "webp",
+    "image",
+    "convert",
+    "compression",
+    "jpg",
+    "png"
+  ],
+  "license": "MIT",
+  "activationEvents": [
+    "onFileSystem:file"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "convert-to-webp.convertFiles",
+        "title": "Convert to WebP"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "convert-to-webp.convertFiles",
+          "when": "resourceExtname =~ /\\.(jpg|jpeg|png)$/i || explorerResourceIsFolder",
+          "group": "7_modification"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Convert to WebP",
+      "properties": {
+        "convert-to-webp.quality": {
+          "type": "number",
+          "default": 0.8,
+          "minimum": 0.1,
+          "maximum": 1,
+          "description": "WebP转换质量 (0.1-1.0)"
+        },
+        "convert-to-webp.deleteOriginal": {
+          "type": "boolean",
+          "default": true,
+          "description": "转换后是否删除原文件"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "package": "npm run compile && vsce package",
+    "package-pnpm": "npm run compile && vsce package --no-dependencies",
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.60.0",
+    "@types/node": "16.x",
+    "typescript": "^4.9.4"
+  },
+  "dependencies": {
+    "sharp": "^0.34.0"
+  }
+}
