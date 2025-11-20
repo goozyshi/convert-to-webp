@@ -8,6 +8,9 @@ export interface ConvertResult {
 export interface ConvertSettings {
   quality: number;
   deleteOriginal: boolean;
+  outputDirectory: "webp" | "same" | "custom";
+  customOutputPath: string;
+  concurrentLimit: number;
 }
 
 export interface ConvertStats {

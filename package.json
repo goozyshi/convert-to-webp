@@ -69,6 +69,29 @@
           "type": "boolean",
           "default": true,
           "description": "转换后是否删除原文件"
+        },
+        "convert-to-webp.outputDirectory": {
+          "type": "string",
+          "enum": ["webp", "same", "custom"],
+          "default": "webp",
+          "enumDescriptions": [
+            "在原文件目录下创建 webp 子目录",
+            "原地替换原文件",
+            "自定义输出目录"
+          ],
+          "description": "输出目录设置"
+        },
+        "convert-to-webp.customOutputPath": {
+          "type": "string",
+          "default": "",
+          "description": "自定义输出目录路径（相对于原文件目录，仅在 outputDirectory=custom 时生效）"
+        },
+        "convert-to-webp.concurrentLimit": {
+          "type": "number",
+          "default": 5,
+          "minimum": 1,
+          "maximum": 20,
+          "description": "并发转换的最大任务数"
         }
       }
     }
