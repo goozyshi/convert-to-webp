@@ -123,12 +123,18 @@ export async function convertImage(
 }
 
 // 删除原始文件
-export async function deleteOriginalFile(filePath: string): Promise<boolean> {
+export async function deleteOriginalFile(
+  filePath: string,
+  outputChannel?: vscode.OutputChannel
+): Promise<boolean> {
   try {
     await fs.unlink(filePath);
+    outputChannel?.appendLine(`  🗑️  已删除原文件: ${path.basename(filePath)}`);
     return true;
-  } catch (error) {
-    console.error(`删除失败 ${filePath}:`, error);
+  } catch (error: any) {
+    const errorMsg = `删除失败 ${path.basename(filePath)}: ${error.message}`;
+    console.error(errorMsg, error);
+    outputChannel?.appendLine(`  ⚠️  ${errorMsg}`);
     return false;
   }
 }
@@ -302,9 +308,14 @@ export async function processConversion(
         `(压缩 ${compressionRatio}%)`
       );
 
-      // 删除原始文件（仅在非原地替换模式下）
-      if (settings.deleteOriginal && settings.outputDirectory !== "same") {
-        await deleteOriginalFile(inputPath);
+      // 删除原始文件的条件：
+      // 1. 原地替换模式：总是删除原文件
+      // 2. 非原地替换模式：根据 deleteOriginal 配置决定
+      if (settings.outputDirectory === "same" || settings.deleteOriginal) {
+        const deleted = await deleteOriginalFile(inputPath, outputChannel);
+        if (!deleted) {
+          outputChannel?.appendLine(`  ⚠️  警告: 原文件删除失败，请手动删除`);
+        }
       }
     } else {
       outputChannel?.appendLine(
@@ -335,7 +346,7 @@ export async function processConversion(
       totalCompressedSize += result.compressedSize;
       
       // 统计删除数量
-      if (settings.deleteOriginal && settings.outputDirectory !== "same") {
+      if (settings.outputDirectory === "same" || settings.deleteOriginal) {
         deletedCount++;
       }
     }
